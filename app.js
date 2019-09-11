@@ -8,7 +8,7 @@ const app = express();
 app.listen(8080);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-mongoose.connect('mongodb://localhost:27017/movies', function (err) {
+mongoose.connect('mongodb://localhost:27017/movies',{ useNewUrlParser: true }, function (err) {
     if (err) {
         return console.log('Mongoose - connection error:', err);
     }
