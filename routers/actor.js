@@ -55,5 +55,44 @@ module.exports = {
                 });
             })
         });
-    }
+    },
+    removeMovie: function (req, res) {
+        Actor.findOne({ _id: req.params.actorId }, function (err, movie) {
+            if (err) return res.status(400).json(err);
+            if (!movie) return res.status(404).json();
+            Movie.findOne({ _id: req.params.movieId }, function (err, actor) {
+                if (err) return res.status(400).json(err);
+                if (!movie) return res.status(404).json();
+                movie.movies.remove(actor._id);
+                movie.save(function (err) {
+                    if (err) return res.status(500).json(err);
+                    res.json(movie);
+                });
+            })
+        });
+    },
+    // removeMovie: function(req, res){
+    //     let movieID = new mongoose.Types.ObjectId(req.params.movieId);
+    //     let actorID = new mongoose.Types.ObjectId(req.params.actorId);
+
+    //     Actor.findOne({_id: actorID }, function(err, movie){
+    //         if (err) return res.status(400).json(err);
+    //         if (!movie) return res.status(404).json();
+    //         Movie.findOne({_id: movieID }, function(err, actor){
+    //             if (err) return res.status(400).json(err);
+    //             if (!movie) return res.status(404).json();
+    //             movie.movie.remove(actor._id);
+    //             movie.save(function(err){
+    //                 if (err) return res.status(500).json(err);
+    //                 res.json(movie);
+    //             });
+    //         });
+    //     });
+    // }
+
+
+
+
+
+
 };

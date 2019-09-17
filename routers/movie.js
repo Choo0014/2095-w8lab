@@ -31,5 +31,54 @@ module.exports = {
             if (!movie) return res.status(404).json();
             res.json(movie);
         });
+    },
+    deleteOne: function (req, res) {
+        Movie.findOneAndRemove({ _id: req.params.id }, function (err) {
+            if (err) return res.status(400).json(err);
+            res.json();
+        });
+    },
+
+    
+    removeActor: function(req, res){
+        Movie.findOne({_id: req.params.movieId}, function(err, movie){
+            if (err) return res.params.status(400).json(err);
+            if (!movie) return res.status(404).json();
+            Actor.findOne({_id: req.params.actorId}, function (err, actor) {
+                if (err) return res.status(400).json();
+                if (!movie) return res.status(404).json();
+                movie.actors.removeOne(actor._id);
+                movie.save(function(err){
+                    if (err) return res.status(500).json(err);
+                    res.json(movie);
+                });
+            });
+        });
+    },
+    addActor: function(req, res){
+        Movie.findOne({ _id: req.params.movieId }, function (err, movie) {
+            if (err) return res.status(400).json(err);
+            if (!movie) return res.status(404).json();
+            Actor.findOne({ _id: req.params.actorId }, function (err, actor) {
+                if (err) return res.status(400).json(err);
+                if (!actor) return res.status(404).json();
+                movie.actors.push(actor._id);
+                movie.save(function (err) {
+                    if (err) return res.status(500).json(err);
+                    res.json(movie);
+                });
+            })
+        });
+    },
+    getAllYear: function (req, res) {
+        Movie.wher({ _id: req.params.movieId }).where('year').gte(req.params.year2).where('year').lte(req.params.year1).exec(function (err, movie) {
+            if (err) return res.status(400).json(err);
+            if (!movie) return res.status(404).json();
+            movie.populate('actors').exec(err, function(err, movies){
+                if (err) return res.json(err);
+                if (!movies) return res.json();
+                res.json(movies);
+            });
+        });
     }
 };
