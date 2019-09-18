@@ -88,3 +88,4 @@ typings/
 .dynamodb/
 
 #specific file
+w8.code-workspace
